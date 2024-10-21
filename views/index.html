@@ -12,16 +12,25 @@
     <h1>Timestamp Microservice</h1>
     <hr />
     <div class="container">
-      <h2>Example Usage:</h2>
-      <ul>
-        <li><a href="api/2015-12-25">[project url]/api/2015-12-25</a></li>
-        <li><a href="api/1451001600000">[project url]/api/1451001600000</a></li>
-      </ul>
+      <h2>Date from request body</h2>
+      <form id="form">
+        <label for="date"> ingrese la fecha</label>
+        <input type="datetime-local" name="date" id="date" placeholder="aa/bb/cccc">
+        <button type="submit">enviar</button>
+      </form>
+    </div>
+    <div id="output">
 
-      <h2>Example Output:</h2>
-      <p>
-        <code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code>
-      </p>
+    </div>
+    <div class="container">
+      <h2>Date from request params</h2>
+      <form id="formParam">
+        <label for="date"> ingrese la fecha</label>
+        <input type="datetime-local" name="date" id="date" placeholder="aa/bb/cccc">
+        <button type="submit">enviar</button>
+      </form>
+    </div>
+    <div id="getDate">
     </div>
     <div class="footer">
       <p>
@@ -30,3 +39,50 @@
     </div>
   </body>
 </html>
+
+<script>
+const formBody = document.getElementById('form')
+const output = document.getElementById('output')
+const handlerSumbit = async (e)=>{
+e.preventDefault()
+const formData = new FormData(formBody);
+const fields = Object.fromEntries(formData);
+const url = 'http://localhost:3000/api/date'
+try{
+  const response = await fetch(url,{
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(fields)
+})
+ const data = await response.json()
+
+ const childContent = `
+  <p class="content"><b>unix:</b> ${data.unix}</p>
+  <p class="content"><b>UTC:</b> ${data.utc}</p>` 
+ output.innerHTML = childContent
+}
+catch (err){
+  console.log(err)
+}
+
+}
+formBody.addEventListener('submit', handlerSumbit)
+
+const formParam = document.getElementById('formParam')
+const getDate = document.getElementById('getDate')
+const handlerSumbitParam = (e)=>{
+  e.preventDefault()
+  const formData = new FormData(formParam);
+  const fields = Object.fromEntries(formData);
+  const URL = `/api/timestamp/${fields.date}`
+  const childButton = `
+  <a href="${URL}" target="_blank">get JSON DATE</a>
+  `
+  getDate.innerHTML = childButton
+
+}
+formParam.addEventListener('submit', handlerSumbitParam)
+
+</script>
