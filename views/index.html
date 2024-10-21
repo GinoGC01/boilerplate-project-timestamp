@@ -76,7 +76,7 @@ const handlerSumbitParam = (e)=>{
   e.preventDefault()
   const formData = new FormData(formParam);
   const fields = Object.fromEntries(formData);
-  const URL = `/api/timestamp/${fields.date}`
+  const URL = `/api/${fields.date}`
   const childButton = `
   <a href="${URL}" target="_blank">get JSON DATE</a>
   `

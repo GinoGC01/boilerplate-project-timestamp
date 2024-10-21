@@ -35,7 +35,7 @@ app.post("/api/date", (req, res) => {
   res.json(newDate);
 });
 
-app.get("/api/timestamp/:dateString?", (req, res) => {
+app.get("/api/:dateString?", (req, res) => {
   const { dateString } = req.params;
 
   // Si no se envía una fecha, usamos la fecha actual
