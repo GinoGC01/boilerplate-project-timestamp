@@ -38,16 +38,24 @@ app.post("/api/date", (req, res) => {
 app.get("/api/:dateString?", (req, res) => {
   const { dateString } = req.params;
 
-  // Si no se envía una fecha, usamos la fecha actual
-  let date = dateString ? new Date(dateString) : new Date();
+  if (/^\d{10,13}$/.test(dateString)) {
+    //si viene en formato unix
+    const timestampInt = parseInt(dateString);
+    const date = new Date(timestampInt);
+    const newDateJson = dateFormat(date);
+    res.json(newDateJson);
+  } else {
+    // Si no se envía una fecha, usamos la fecha actual
+    let date = dateString ? new Date(dateString) : new Date();
 
-  // fecha válida
-  if (isNaN(date.getTime())) {
-    return res.json({ error: "Invalid Date" });
+    // fecha válida
+    if (isNaN(date.getTime())) {
+      return res.json({ error: "Invalid Date" });
+    }
+
+    const newDate = dateFormat(date);
+    res.json(newDate);
   }
-
-  const newDate = dateFormat(date);
-  res.json(newDate);
 });
 
 // Listen on port set in environment variable or default to 3000
